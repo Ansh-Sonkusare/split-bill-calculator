@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Split Bill Calculator - Stellar dApp
 
-## Getting Started
+A decentralized application for splitting bills and sending XLM payments on the Stellar Testnet. Built with Next.js, TypeScript, Tailwind CSS, and integrated with Freighter wallet.
 
-First, run the development server:
+## Features
+
+- **Wallet Integration**: Connect and disconnect Freighter wallet
+- **Balance Display**: View your XLM balance in real-time
+- **Bill Splitting**: Enter a total amount and split equally among participants
+- **Batch Payments**: Send XLM to multiple participants in a single transaction
+- **Transaction Feedback**: View transaction hash and status on Stellar Explorer
+
+## Tech Stack
+
+- **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS
+- **Blockchain**: Stellar SDK, Stellar Testnet
+- **Wallet**: Freighter Browser Extension
+
+## Setup Instructions
+
+### Prerequisites
+
+1. Install [Freighter](https://freighter.app/) browser extension
+2. Create or import a wallet on Stellar Testnet
+3. Get testnet XLM from the [Stellar Friendbot](https://friendbot.stellar.org/)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/split-bill-calculator.git
+
+# Navigate to the project
+cd split-bill-calculator
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Connect Wallet**: Click "Connect Freighter" to link your Stellar wallet
+2. **Enter Bill Amount**: Input the total XLM amount to split
+3. **Add Participants**: Enter Stellar addresses (G...) for each person
+4. **Review Split**: See how much each participant will receive
+5. **Send Payment**: Confirm and send XLM to all participants in one transaction
 
-## Learn More
+## Screenshots
 
-To learn more about Next.js, take a look at the following resources:
+### Wallet Connected State
+![Wallet Connected](screenshots/wallet-connected.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Balance Displayed
+![Balance Display](screenshots/balance-displayed.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Successful Transaction
+![Transaction Success](screenshots/transaction-success.png)
 
-## Deploy on Vercel
+### Transaction Result Shown
+![Transaction Result](screenshots/transaction-result.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+split-bill-calculator/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx          # Root layout with WalletProvider
+│   │   ├── page.tsx            # Main application page
+│   │   └── globals.css         # Global styles
+│   ├── components/
+│   │   ├── WalletConnect.tsx   # Wallet connection UI
+│   │   ├── BalanceDisplay.tsx  # XLM balance display
+│   │   ├── BillForm.tsx        # Bill input form
+│   │   ├── SplitSummary.tsx    # Payment summary
+│   │   └── TransactionResult.tsx # Transaction feedback
+│   ├── context/
+│   │   └── WalletContext.tsx   # Global wallet state
+│   └── lib/
+│       ├── freighter.ts        # Freighter wallet helpers
+│       └── stellar.ts          # Stellar SDK utilities
+├── package.json
+├── tailwind.config.ts
+└── tsconfig.json
+```
+
+## License
+
+MIT
