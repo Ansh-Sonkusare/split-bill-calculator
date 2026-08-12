@@ -86,34 +86,39 @@ export function BillForm({ onCalculate }: BillFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Total Bill Amount (XLM)
+        <label className="block text-sm font-medium text-slate-300 mb-2">
+          Total Bill Amount
         </label>
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          value={totalAmount}
-          onChange={(e) => setTotalAmount(e.target.value)}
-          placeholder="0.00"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
+        <div className="relative">
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            value={totalAmount}
+            onChange={(e) => setTotalAmount(e.target.value)}
+            placeholder="0.00"
+            className="input-field w-full px-4 py-3 rounded-xl text-lg font-semibold"
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-stellar-cyan font-medium">
+            XLM
+          </span>
+        </div>
         {errors.totalAmount && (
-          <p className="mt-1 text-sm text-red-600">{errors.totalAmount}</p>
+          <p className="mt-2 text-sm text-stellar-red">{errors.totalAmount}</p>
         )}
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-gray-700">
+        <div className="flex items-center justify-between mb-3">
+          <label className="block text-sm font-medium text-slate-300">
             Participants
           </label>
           <button
             type="button"
             onClick={addParticipant}
-            className="text-sm text-indigo-600 hover:text-indigo-800"
+            className="text-sm text-stellar-purple hover:text-stellar-cyan transition-colors font-medium"
           >
             + Add
           </button>
@@ -121,25 +126,34 @@ export function BillForm({ onCalculate }: BillFormProps) {
 
         <div className="space-y-2">
           {participants.map((participant, index) => (
-            <div key={participant.id} className="flex gap-2">
-              <input
-                type="text"
-                value={participant.address}
-                onChange={(e) => updateAddress(participant.id, e.target.value)}
-                placeholder="G... (Stellar address)"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
-              />
-              {participants.length > 2 && (
-                <button
-                  type="button"
-                  onClick={() => removeParticipant(participant.id)}
-                  className="px-3 py-2 text-red-500 hover:text-red-700"
-                >
-                  ×
-                </button>
-              )}
+            <div key={participant.id} className="animate-fade-in">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stellar-purple text-xs font-mono">
+                    {index + 1}
+                  </span>
+                  <input
+                    type="text"
+                    value={participant.address}
+                    onChange={(e) =>
+                      updateAddress(participant.id, e.target.value)
+                    }
+                    placeholder="G... (Stellar address)"
+                    className="input-field w-full pl-8 pr-3 py-2.5 rounded-xl font-mono text-sm"
+                  />
+                </div>
+                {participants.length > 2 && (
+                  <button
+                    type="button"
+                    onClick={() => removeParticipant(participant.id)}
+                    className="w-10 flex items-center justify-center text-stellar-red/60 hover:text-stellar-red hover:bg-stellar-red/10 rounded-xl transition-colors"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
               {errors[`address-${index}`] && (
-                <p className="text-xs text-red-600">
+                <p className="mt-1 ml-2 text-xs text-stellar-red">
                   {errors[`address-${index}`]}
                 </p>
               )}
@@ -147,26 +161,28 @@ export function BillForm({ onCalculate }: BillFormProps) {
           ))}
         </div>
         {errors.participants && (
-          <p className="mt-1 text-sm text-red-600">{errors.participants}</p>
+          <p className="mt-2 text-sm text-stellar-red">{errors.participants}</p>
         )}
       </div>
 
       {participantCount > 0 && amount > 0 && (
-        <div className="bg-indigo-50 p-3 rounded-lg">
-          <p className="text-sm text-indigo-800">
-            Split: <span className="font-semibold">{amount.toFixed(2)}</span> ÷{" "}
-            <span className="font-semibold">{participantCount}</span> ={" "}
-            <span className="font-semibold">{splitAmount.toFixed(4)} XLM</span>{" "}
-            each
-          </p>
+        <div className="glass p-4 rounded-xl animate-scale-in">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-400">
+              {amount.toFixed(2)} ÷ {participantCount}
+            </span>
+            <span className="text-lg font-bold gradient-text">
+              {splitAmount.toFixed(4)} XLM each
+            </span>
+          </div>
         </div>
       )}
 
       <button
         type="submit"
-        className="w-full py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+        className="btn-primary w-full py-3.5 text-sm font-semibold text-white rounded-xl"
       >
-        Calculate Split
+        Calculate Split →
       </button>
     </form>
   );

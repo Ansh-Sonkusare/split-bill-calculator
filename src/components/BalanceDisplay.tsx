@@ -9,22 +9,23 @@ export function BalanceDisplay() {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-slate-400">
         Balance:
         {state.isBalanceLoading ? (
-          <span className="ml-2 text-gray-400">Loading...</span>
+          <span className="ml-2 text-slate-500">Loading...</span>
         ) : (
-          <span className="ml-2 font-semibold text-gray-900">
-            {state.balance ? parseFloat(state.balance).toFixed(2) : "0.00"} XLM
+          <span className="ml-2 font-bold text-white text-base">
+            {state.balance ? parseFloat(state.balance).toFixed(2) : "0.00"}{" "}
+            <span className="text-stellar-cyan text-xs font-normal">XLM</span>
           </span>
         )}
       </div>
       <button
         onClick={refreshBalance}
         disabled={state.isBalanceLoading}
-        className="text-xs text-indigo-600 hover:text-indigo-800 disabled:opacity-50"
+        className="text-xs text-stellar-purple hover:text-stellar-cyan disabled:opacity-50 transition-colors"
       >
-        Refresh
+        ↻
       </button>
     </div>
   );

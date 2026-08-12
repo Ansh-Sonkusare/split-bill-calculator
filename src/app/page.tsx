@@ -62,10 +62,15 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col flex-1">
-      <header className="border-b bg-white">
-        <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-bold text-gray-900">Split Bill</h1>
+    <div className="flex flex-col min-h-screen">
+      <header className="glass-strong border-b border-stellar-purple/10">
+        <div className="max-w-lg mx-auto px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-stellar-purple to-stellar-cyan flex items-center justify-center">
+              <span className="text-white text-sm font-bold">✦</span>
+            </div>
+            <h1 className="text-lg font-bold gradient-text">Split Bill</h1>
+          </div>
           <div className="flex items-center gap-4">
             <BalanceDisplay />
             <WalletConnect />
@@ -73,55 +78,56 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-lg mx-auto w-full px-5 py-8">
         {state.error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <div className="mb-5 p-4 glass rounded-xl border border-stellar-red/30 text-sm text-stellar-red animate-fade-in">
             {state.error}
           </div>
         )}
 
         {!state.isConnected ? (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">💰</div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Split Bills Easily
+          <div className="text-center py-12 animate-fade-in">
+            <div className="text-7xl mb-6 animate-float">✦</div>
+            <h2 className="text-3xl font-bold text-white mb-3">
+              Split Bills <span className="gradient-text">Instantly</span>
             </h2>
-            <p className="text-gray-600 mb-6">
-              Connect your Freighter wallet to start splitting bills and sending
-              XLM on Stellar Testnet.
+            <p className="text-slate-400 mb-8 max-w-xs mx-auto">
+              Connect your wallet to split bills and send XLM on Stellar Testnet
             </p>
-            <div className="bg-white p-6 rounded-xl border border-gray-200 text-left">
-              <h3 className="font-medium text-gray-900 mb-3">How it works:</h3>
-              <ol className="space-y-2 text-sm text-gray-600">
-                <li className="flex gap-2">
-                  <span className="font-bold text-indigo-600">1.</span>
-                  Connect your Freighter wallet
-                </li>
-                <li className="flex gap-2">
-                  <span className="font-bold text-indigo-600">2.</span>
-                  Enter the total bill amount
-                </li>
-                <li className="flex gap-2">
-                  <span className="font-bold text-indigo-600">3.</span>
-                  Add participant Stellar addresses
-                </li>
-                <li className="flex gap-2">
-                  <span className="font-bold text-indigo-600">4.</span>
-                  Review and send payments to all
-                </li>
+            <div className="glass p-6 rounded-2xl text-left max-w-sm mx-auto">
+              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-stellar-purple animate-pulse" />
+                How it works
+              </h3>
+              <ol className="space-y-3">
+                {[
+                  "Connect your Freighter wallet",
+                  "Enter the total bill amount",
+                  "Add participant Stellar addresses",
+                  "Review and send payments",
+                ].map((text, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
+                    <span className="w-6 h-6 rounded-full bg-gradient-to-br from-stellar-purple to-stellar-blue flex items-center justify-center text-xs font-bold text-white shrink-0">
+                      {i + 1}
+                    </span>
+                    {text}
+                  </li>
+                ))}
               </ol>
             </div>
           </div>
         ) : step === "form" ? (
-          <div className="bg-white p-6 rounded-xl border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="glass-strong p-6 rounded-2xl animate-fade-in">
+            <h2 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-stellar-cyan" />
               New Split
             </h2>
             <BillForm onCalculate={handleCalculate} />
           </div>
         ) : step === "summary" ? (
-          <div className="bg-white p-6 rounded-xl border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="glass-strong p-6 rounded-2xl">
+            <h2 className="text-xl font-bold text-white mb-5 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-stellar-purple" />
               Confirm Payment
             </h2>
             <SplitSummary
@@ -133,7 +139,7 @@ export default function Home() {
             />
           </div>
         ) : (
-          <div className="bg-white p-6 rounded-xl border border-gray-200">
+          <div className="glass-strong p-6 rounded-2xl">
             <TransactionResult
               status={txStatus}
               txHash={txHash}
@@ -143,6 +149,10 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      <footer className="text-center py-4 text-xs text-slate-600">
+        Stellar Testnet · Built for splitting bills
+      </footer>
     </div>
   );
 }

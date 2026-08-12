@@ -12,12 +12,12 @@ export function WalletConnect() {
   if (state.isConnected && state.publicKey) {
     return (
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg font-mono">
+        <span className="text-sm text-stellar-cyan font-mono bg-stellar-cyan/10 px-3 py-1.5 rounded-lg border border-stellar-cyan/20">
           {truncateAddress(state.publicKey)}
         </span>
         <button
           onClick={disconnect}
-          className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+          className="btn-danger px-4 py-2 text-sm font-medium text-white rounded-lg"
         >
           Disconnect
         </button>
@@ -29,9 +29,16 @@ export function WalletConnect() {
     <button
       onClick={connect}
       disabled={state.isConnecting}
-      className="px-6 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="btn-primary px-6 py-2.5 text-sm font-semibold text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      {state.isConnecting ? "Connecting..." : "Connect Freighter"}
+      {state.isConnecting ? (
+        <span className="flex items-center gap-2">
+          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin-slow" />
+          Connecting...
+        </span>
+      ) : (
+        "Connect Freighter"
+      )}
     </button>
   );
 }
