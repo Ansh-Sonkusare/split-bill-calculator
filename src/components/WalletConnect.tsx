@@ -12,7 +12,7 @@ export function WalletConnect() {
   if (state.isConnected && state.publicKey) {
     return (
       <div className="flex items-center gap-3">
-        <span className="text-sm text-neutral-600 font-mono bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-md">
+        <span className="text-sm text-neutral-600 font-mono bg-neutral-50 border border-neutral-200 px-3 py-1.5 rounded-md whitespace-nowrap">
           {truncateAddress(state.publicKey)}
         </span>
         <button
