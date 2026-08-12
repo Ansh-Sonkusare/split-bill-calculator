@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useWallet } from "@/context/WalletContext";
-import { WalletConnect } from "@/components/WalletConnect";
-import { BalanceDisplay } from "@/components/BalanceDisplay";
+import { Navbar } from "@/components/Navbar";
 import { BillForm } from "@/components/BillForm";
 import { SplitSummary } from "@/components/SplitSummary";
 import { TransactionResult } from "@/components/TransactionResult";
@@ -63,17 +62,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="border-b border-neutral-100">
-        <div className="max-w-md mx-auto px-5 py-4 flex items-center justify-between">
-          <h1 className="text-base font-semibold text-neutral-900">
-            Split Bill
-          </h1>
-          <div className="flex items-center gap-4">
-            <BalanceDisplay />
-            <WalletConnect />
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="flex-1 max-w-md mx-auto w-full px-5 py-10">
         {state.error && (
