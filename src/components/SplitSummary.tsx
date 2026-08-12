@@ -23,48 +23,45 @@ export function SplitSummary({
   }
 
   return (
-    <div className="space-y-5 animate-fade-in">
-      <div className="glass p-5 rounded-xl">
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Total</p>
-            <p className="text-xl font-bold text-white">{total.toFixed(2)} <span className="text-sm text-stellar-cyan">XLM</span></p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">People</p>
-            <p className="text-xl font-bold text-white">{participants.length}</p>
-          </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between border border-neutral-200 rounded-md px-4 py-3.5">
+        <div>
+          <p className="text-xs text-neutral-400 uppercase tracking-wider">
+            Total
+          </p>
+          <p className="text-xl font-semibold text-neutral-900 mt-0.5">
+            {total.toFixed(2)} <span className="text-sm text-neutral-500 font-normal">XLM</span>
+          </p>
         </div>
-        <div className="border-t border-stellar-purple/20 pt-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-400">Each person pays</span>
-            <span className="text-2xl font-bold gradient-text">
-              {perPerson.toFixed(4)} XLM
-            </span>
-          </div>
+        <div className="text-right">
+          <p className="text-xs text-neutral-400 uppercase tracking-wider">
+            Each pays
+          </p>
+          <p className="text-xl font-semibold text-neutral-900 mt-0.5">
+            {perPerson.toFixed(4)} <span className="text-sm text-neutral-500 font-normal">XLM</span>
+          </p>
         </div>
       </div>
 
       <div>
-        <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
-          Recipients
+        <p className="text-xs text-neutral-400 uppercase tracking-wider mb-3">
+          Recipients ({participants.length})
         </p>
         <div className="space-y-2">
           {participants.map((addr, i) => (
             <div
               key={i}
-              className="glass flex items-center justify-between p-3 rounded-xl animate-fade-in"
-              style={{ animationDelay: `${i * 50}ms` }}
+              className="flex items-center justify-between border border-neutral-100 rounded-md px-3.5 py-2.5"
             >
-              <div className="flex items-center gap-3">
-                <span className="w-7 h-7 rounded-full bg-gradient-to-br from-stellar-purple to-stellar-blue flex items-center justify-center text-xs font-bold text-white">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="w-6 h-6 flex items-center justify-center bg-neutral-100 rounded-full text-xs font-medium text-neutral-600 shrink-0">
                   {i + 1}
                 </span>
-                <span className="font-mono text-sm text-slate-300">
+                <span className="font-mono text-sm text-neutral-600 truncate">
                   {truncateAddress(addr)}
                 </span>
               </div>
-              <span className="text-sm font-bold text-stellar-cyan">
+              <span className="text-sm font-medium text-neutral-900 shrink-0 ml-3">
                 {perPerson.toFixed(4)}
               </span>
             </div>
@@ -72,29 +69,22 @@ export function SplitSummary({
         </div>
       </div>
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-3">
         <button
           type="button"
           onClick={onBack}
           disabled={isSending}
-          className="flex-1 py-3.5 text-sm font-semibold text-slate-300 glass rounded-xl hover:bg-white/5 disabled:opacity-50 transition-all"
+          className="flex-1 py-3 text-sm font-medium text-neutral-600 border border-neutral-200 rounded-md hover:bg-neutral-50 disabled:opacity-50 transition-colors"
         >
-          ← Back
+          Back
         </button>
         <button
           type="button"
           onClick={onConfirm}
           disabled={isSending}
-          className="btn-primary flex-1 py-3.5 text-sm font-semibold text-white rounded-xl disabled:opacity-50"
+          className="flex-1 py-3 text-sm font-semibold text-white bg-neutral-900 rounded-md hover:bg-neutral-800 disabled:opacity-50 transition-colors"
         >
-          {isSending ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin-slow" />
-              Sending...
-            </span>
-          ) : (
-            "Send Payment to All →"
-          )}
+          {isSending ? "Sending..." : "Send Payments"}
         </button>
       </div>
     </div>

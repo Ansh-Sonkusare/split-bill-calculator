@@ -85,10 +85,13 @@ export function BillForm({ onCalculate }: BillFormProps) {
     );
   }
 
+  const inputClasses =
+    "w-full px-3.5 py-2.5 bg-white border border-neutral-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-neutral-400 transition-shadow";
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-slate-300 mb-2">
+        <label className="block text-sm font-medium text-neutral-700 mb-1.5">
           Total Bill Amount
         </label>
         <div className="relative">
@@ -99,61 +102,57 @@ export function BillForm({ onCalculate }: BillFormProps) {
             value={totalAmount}
             onChange={(e) => setTotalAmount(e.target.value)}
             placeholder="0.00"
-            className="input-field w-full px-4 py-3 rounded-xl text-lg font-semibold"
+            className={`${inputClasses} pr-14`}
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-stellar-cyan font-medium">
+          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-neutral-400">
             XLM
           </span>
         </div>
         {errors.totalAmount && (
-          <p className="mt-2 text-sm text-stellar-red">{errors.totalAmount}</p>
+          <p className="mt-1.5 text-xs text-red-600">{errors.totalAmount}</p>
         )}
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <label className="block text-sm font-medium text-slate-300">
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="block text-sm font-medium text-neutral-700">
             Participants
           </label>
           <button
             type="button"
             onClick={addParticipant}
-            className="text-sm text-stellar-purple hover:text-stellar-cyan transition-colors font-medium"
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
           >
             + Add
           </button>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {participants.map((participant, index) => (
-            <div key={participant.id} className="animate-fade-in">
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stellar-purple text-xs font-mono">
-                    {index + 1}
-                  </span>
-                  <input
-                    type="text"
-                    value={participant.address}
-                    onChange={(e) =>
-                      updateAddress(participant.id, e.target.value)
-                    }
-                    placeholder="G... (Stellar address)"
-                    className="input-field w-full pl-8 pr-3 py-2.5 rounded-xl font-mono text-sm"
-                  />
-                </div>
+            <div key={participant.id}>
+              <div className="flex items-center gap-2">
+                <span className="w-5 text-xs text-neutral-400 font-mono">
+                  {index + 1}
+                </span>
+                <input
+                  type="text"
+                  value={participant.address}
+                  onChange={(e) => updateAddress(participant.id, e.target.value)}
+                  placeholder="G... (Stellar address)"
+                  className={`${inputClasses} font-mono`}
+                />
                 {participants.length > 2 && (
                   <button
                     type="button"
                     onClick={() => removeParticipant(participant.id)}
-                    className="w-10 flex items-center justify-center text-stellar-red/60 hover:text-stellar-red hover:bg-stellar-red/10 rounded-xl transition-colors"
+                    className="w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
                   >
                     ×
                   </button>
                 )}
               </div>
               {errors[`address-${index}`] && (
-                <p className="mt-1 ml-2 text-xs text-stellar-red">
+                <p className="mt-1 ml-7 text-xs text-red-600">
                   {errors[`address-${index}`]}
                 </p>
               )}
@@ -161,28 +160,26 @@ export function BillForm({ onCalculate }: BillFormProps) {
           ))}
         </div>
         {errors.participants && (
-          <p className="mt-2 text-sm text-stellar-red">{errors.participants}</p>
+          <p className="mt-1.5 text-xs text-red-600">{errors.participants}</p>
         )}
       </div>
 
       {participantCount > 0 && amount > 0 && (
-        <div className="glass p-4 rounded-xl animate-scale-in">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-400">
-              {amount.toFixed(2)} ÷ {participantCount}
-            </span>
-            <span className="text-lg font-bold gradient-text">
-              {splitAmount.toFixed(4)} XLM each
-            </span>
-          </div>
+        <div className="flex items-center justify-between bg-neutral-50 border border-neutral-100 rounded-md px-4 py-3">
+          <span className="text-sm text-neutral-500">
+            {amount.toFixed(2)} ÷ {participantCount}
+          </span>
+          <span className="text-sm font-semibold text-neutral-900">
+            {splitAmount.toFixed(4)} XLM each
+          </span>
         </div>
       )}
 
       <button
         type="submit"
-        className="btn-primary w-full py-3.5 text-sm font-semibold text-white rounded-xl"
+        className="w-full py-3 text-sm font-semibold text-white bg-neutral-900 rounded-md hover:bg-neutral-800 transition-colors"
       >
-        Calculate Split →
+        Calculate Split
       </button>
     </form>
   );

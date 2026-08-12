@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Split Bill Calculator | Stellar dApp",
-  description: "Split bills and send XLM payments on Stellar Testnet",
+  title: "Split Bill | Stellar dApp",
+  description: "Split bills and send XLM on Stellar Testnet",
 };
 
 export default function RootLayout({
@@ -24,11 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+      <body className="min-h-full bg-white text-neutral-900 antialiased">
         <WalletProvider>{children}</WalletProvider>
       </body>
     </html>

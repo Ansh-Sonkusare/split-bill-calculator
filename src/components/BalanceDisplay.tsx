@@ -8,24 +8,25 @@ export function BalanceDisplay() {
   if (!state.isConnected) return null;
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="text-sm text-slate-400">
-        Balance:
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-neutral-500">
         {state.isBalanceLoading ? (
-          <span className="ml-2 text-slate-500">Loading...</span>
+          "Loading..."
         ) : (
-          <span className="ml-2 font-bold text-white text-base">
-            {state.balance ? parseFloat(state.balance).toFixed(2) : "0.00"}{" "}
-            <span className="text-stellar-cyan text-xs font-normal">XLM</span>
-          </span>
+          <>
+            <span className="font-semibold text-neutral-900">
+              {state.balance ? parseFloat(state.balance).toFixed(2) : "0.00"}
+            </span>{" "}
+            XLM
+          </>
         )}
-      </div>
+      </span>
       <button
         onClick={refreshBalance}
         disabled={state.isBalanceLoading}
-        className="text-xs text-stellar-purple hover:text-stellar-cyan disabled:opacity-50 transition-colors"
+        className="text-xs text-indigo-600 hover:text-indigo-800 disabled:opacity-50 transition-colors"
       >
-        ↻
+        Refresh
       </button>
     </div>
   );
