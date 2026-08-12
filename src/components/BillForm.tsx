@@ -13,6 +13,16 @@ interface BillFormProps {
   onCalculate: (totalAmount: string, participants: string[]) => void;
 }
 
+const inputClasses =
+  "w-full px-3.5 h-11 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 placeholder:text-slate-400 transition-all";
+
+const avatarColors = [
+  "bg-indigo-100 text-indigo-600",
+  "bg-sky-100 text-sky-600",
+  "bg-emerald-100 text-emerald-600",
+  "bg-amber-100 text-amber-600",
+];
+
 export function BillForm({ onCalculate }: BillFormProps) {
   const { state } = useWallet();
   const [totalAmount, setTotalAmount] = useState("");
@@ -85,17 +95,14 @@ export function BillForm({ onCalculate }: BillFormProps) {
     );
   }
 
-  const inputClasses =
-    "w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 placeholder:text-slate-400 transition-all";
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label className="block text-[13px] font-medium text-slate-700 mb-2">
           Total Bill Amount
         </label>
         <div className="relative">
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -117,9 +124,9 @@ export function BillForm({ onCalculate }: BillFormProps) {
             value={totalAmount}
             onChange={(e) => setTotalAmount(e.target.value)}
             placeholder="0.00"
-            className={`${inputClasses} pl-10 pr-16 text-lg font-semibold`}
+            className={`${inputClasses} pl-11 pr-16 h-14 text-xl font-bold tabular-nums`}
           />
-          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-600 text-xs font-semibold">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-600 text-xs font-bold">
             XLM
           </span>
         </div>
@@ -130,26 +137,20 @@ export function BillForm({ onCalculate }: BillFormProps) {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-[13px] font-medium text-slate-700">
             Participants
           </label>
-          <span className="text-xs text-slate-400">
-            {participantCount} of {participantCount}
+          <span className="text-xs text-slate-400 tabular-nums">
+            {participantCount} people
           </span>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {participants.map((participant, index) => (
             <div key={participant.id}>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <div
-                  className={`w-7 h-7 flex items-center justify-center rounded-full text-xs font-semibold shrink-0 ${
-                    index % 3 === 0
-                      ? "bg-indigo-100 text-indigo-600"
-                      : index % 3 === 1
-                      ? "bg-sky-100 text-sky-600"
-                      : "bg-emerald-100 text-emerald-600"
-                  }`}
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold shrink-0 ${avatarColors[index % 4]}`}
                 >
                   {index + 1}
                 </div>
@@ -165,7 +166,7 @@ export function BillForm({ onCalculate }: BillFormProps) {
                     type="button"
                     onClick={() => removeParticipant(participant.id)}
                     title="Remove participant"
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-300 hover:text-red-600 hover:bg-red-50 transition-colors"
+                    className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-300 hover:text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <svg
                       viewBox="0 0 24 24"
@@ -184,7 +185,7 @@ export function BillForm({ onCalculate }: BillFormProps) {
                 )}
               </div>
               {errors[`address-${index}`] && (
-                <p className="mt-1 ml-9 text-xs text-red-600">
+                <p className="mt-1 ml-10 text-xs text-red-600">
                   {errors[`address-${index}`]}
                 </p>
               )}
@@ -195,7 +196,7 @@ export function BillForm({ onCalculate }: BillFormProps) {
         <button
           type="button"
           onClick={addParticipant}
-          className="mt-3 w-full py-2.5 flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
+          className="mt-3 w-full h-10 flex items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 text-[13px] font-medium text-slate-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors"
         >
           <svg
             viewBox="0 0 24 24"
@@ -214,12 +215,15 @@ export function BillForm({ onCalculate }: BillFormProps) {
       </div>
 
       {participantCount > 0 && amount > 0 && (
-        <div className="flex items-center justify-between bg-indigo-50/60 border border-indigo-100 rounded-lg px-4 py-3">
-          <div className="flex items-center gap-1.5 text-sm text-slate-500">
-            <span className="font-medium">{amount.toFixed(2)} XLM</span>
-            <span>÷ {participantCount}</span>
+        <div className="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 rounded-xl px-4 py-3 animate-fade-up">
+          <div className="flex items-center gap-2 text-[13px] text-slate-500">
+            <span className="font-semibold text-slate-700 tabular-nums">
+              {amount.toFixed(2)} XLM
+            </span>
+            <span className="text-slate-300">/</span>
+            <span>{participantCount} people</span>
           </div>
-          <span className="text-sm font-bold text-indigo-600">
+          <span className="text-sm font-bold text-indigo-600 tabular-nums">
             {splitAmount.toFixed(4)} XLM each
           </span>
         </div>
@@ -227,7 +231,7 @@ export function BillForm({ onCalculate }: BillFormProps) {
 
       <button
         type="submit"
-        className="w-full py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all"
+        className="w-full h-12 rounded-xl text-sm font-semibold text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 hover:shadow-md active:scale-[0.99] transition-all"
       >
         Calculate Split
       </button>

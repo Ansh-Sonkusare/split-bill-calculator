@@ -48,7 +48,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try {
       const balance = await getBalance(pk);
       setState((prev) => ({ ...prev, balance, isBalanceLoading: false }));
-    } catch (err) {
+    } catch {
       setState((prev) => ({
         ...prev,
         isBalanceLoading: false,
@@ -74,7 +74,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         isConnecting: false,
       }));
       await fetchBalance(address);
-    } catch (err) {
+    } catch {
       setState((prev) => ({
         ...prev,
         isConnecting: false,

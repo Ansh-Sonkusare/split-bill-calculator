@@ -20,7 +20,7 @@ export function TransactionResult({
   const isSuccess = status === "success";
 
   return (
-    <div>
+    <div className="animate-fade-up">
       <div className="text-center py-10">
         <div
           className={`w-16 h-16 mx-auto mb-5 flex items-center justify-center rounded-2xl shadow-sm ${
@@ -34,7 +34,7 @@ export function TransactionResult({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
               className="w-7 h-7"
             >
               <path
@@ -48,7 +48,7 @@ export function TransactionResult({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
               className="w-7 h-7"
             >
               <path
@@ -59,31 +59,46 @@ export function TransactionResult({
             </svg>
           )}
         </div>
-        <h3 className="text-lg font-semibold text-slate-900">
+        <h3 className="text-xl font-bold text-slate-900 tracking-tight">
           {isSuccess ? "Payment Sent" : "Transaction Failed"}
         </h3>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1.5 text-sm text-slate-500">
           {isSuccess
             ? "Transaction confirmed on Stellar Testnet"
             : errorMessage || "Something went wrong"}
         </p>
 
         {isSuccess && txHash && (
-          <div className="mt-6 max-w-sm mx-auto">
-            <p className="text-xs text-slate-400 mb-1.5">Transaction Hash</p>
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2.5">
+          <div className="mt-6 max-w-sm mx-auto text-left">
+            <p className="text-[11px] text-slate-400 uppercase tracking-wider font-medium mb-1.5">
+              Transaction Hash
+            </p>
+            <a
+              href={getExplorerUrl(txHash)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 hover:border-indigo-300 hover:bg-indigo-50/40 transition-colors group"
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <a
-                href={getExplorerUrl(txHash)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-xs text-indigo-600 hover:text-indigo-800 break-all transition-colors"
-              >
+              <span className="font-mono text-xs text-indigo-600 break-all group-hover:text-indigo-800 transition-colors">
                 {txHash}
-              </a>
-            </div>
+              </span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 shrink-0 transition-colors"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                />
+              </svg>
+            </a>
             <p className="mt-2 text-[11px] text-slate-400">
-              View on explorer ↗
+              View on Stellar explorer
             </p>
           </div>
         )}
@@ -91,7 +106,7 @@ export function TransactionResult({
 
       <button
         onClick={onReset}
-        className="w-full py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all"
+        className="w-full h-12 rounded-xl text-sm font-semibold text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 hover:shadow-md active:scale-[0.99] transition-all"
       >
         New Transaction
       </button>
