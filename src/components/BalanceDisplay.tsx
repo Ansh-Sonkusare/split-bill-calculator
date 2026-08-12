@@ -8,25 +8,36 @@ export function BalanceDisplay() {
   if (!state.isConnected) return null;
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-neutral-500">
+    <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-full pl-3 pr-1.5 py-1.5 shadow-sm">
+      <span className="text-sm font-semibold text-slate-900 whitespace-nowrap">
         {state.isBalanceLoading ? (
-          "Loading..."
+          <span className="text-slate-400 font-normal">…</span>
+        ) : state.balance ? (
+          parseFloat(state.balance).toFixed(2)
         ) : (
-          <>
-            <span className="font-semibold text-neutral-900">
-              {state.balance ? parseFloat(state.balance).toFixed(2) : "0.00"}
-            </span>{" "}
-            XLM
-          </>
+          "0.00"
         )}
       </span>
+      <span className="text-[11px] text-slate-400">XLM</span>
       <button
         onClick={refreshBalance}
         disabled={state.isBalanceLoading}
-        className="text-xs text-indigo-600 hover:text-indigo-800 disabled:opacity-50 transition-colors"
+        title="Refresh balance"
+        className="w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-40 transition-colors"
       >
-        Refresh
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          className="w-3.5 h-3.5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+          />
+        </svg>
       </button>
     </div>
   );

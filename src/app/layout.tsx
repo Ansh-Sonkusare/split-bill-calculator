@@ -25,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`}>
-      <body className="min-h-full bg-white text-neutral-900 antialiased">
+      <body className="min-h-full antialiased">
         <WalletProvider>{children}</WalletProvider>
       </body>
     </html>

@@ -22,47 +22,67 @@ export function SplitSummary({
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   }
 
+  function avatarColor(i: number) {
+    return i % 3 === 0
+      ? "bg-indigo-100 text-indigo-600"
+      : i % 3 === 1
+      ? "bg-sky-100 text-sky-600"
+      : "bg-emerald-100 text-emerald-600";
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border border-neutral-200 rounded-md px-4 py-3.5">
-        <div>
-          <p className="text-xs text-neutral-400 uppercase tracking-wider">
-            Total
+      <div className="bg-slate-900 rounded-xl p-5 text-white shadow-md">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-slate-400 uppercase tracking-wider">
+            Total Bill
           </p>
-          <p className="text-xl font-semibold text-neutral-900 mt-0.5">
-            {total.toFixed(2)} <span className="text-sm text-neutral-500 font-normal">XLM</span>
+          <p className="text-xs text-slate-400 uppercase tracking-wider">
+            {participants.length} people
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-xs text-neutral-400 uppercase tracking-wider">
-            Each pays
-          </p>
-          <p className="text-xl font-semibold text-neutral-900 mt-0.5">
-            {perPerson.toFixed(4)} <span className="text-sm text-neutral-500 font-normal">XLM</span>
-          </p>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-3xl font-bold">{total.toFixed(2)}</p>
+            <p className="text-xs text-slate-400 mt-0.5">XLM total</p>
+          </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-emerald-400">
+              {perPerson.toFixed(4)}
+            </p>
+            <p className="text-xs text-slate-400 mt-0.5">XLM each</p>
+          </div>
+        </div>
+        <div className="mt-4 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+          <div className="h-full w-full bg-emerald-500 rounded-full" />
         </div>
       </div>
 
       <div>
-        <p className="text-xs text-neutral-400 uppercase tracking-wider mb-3">
-          Recipients ({participants.length})
+        <p className="text-xs text-slate-500 uppercase tracking-wider mb-3">
+          Sending to
         </p>
         <div className="space-y-2">
           {participants.map((addr, i) => (
             <div
               key={i}
-              className="flex items-center justify-between border border-neutral-100 rounded-md px-3.5 py-2.5"
+              className="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="w-6 h-6 flex items-center justify-center bg-neutral-100 rounded-full text-xs font-medium text-neutral-600 shrink-0">
+                <span
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold shrink-0 ${avatarColor(
+                    i
+                  )}`}
+                >
                   {i + 1}
                 </span>
-                <span className="font-mono text-sm text-neutral-600 truncate">
+                <span className="font-mono text-sm text-slate-600 truncate">
                   {truncateAddress(addr)}
                 </span>
               </div>
-              <span className="text-sm font-medium text-neutral-900 shrink-0 ml-3">
+              <span className="text-sm font-semibold text-slate-900 shrink-0 ml-3">
                 {perPerson.toFixed(4)}
+                <span className="text-xs text-slate-400 font-normal"> XLM</span>
               </span>
             </div>
           ))}
@@ -74,7 +94,7 @@ export function SplitSummary({
           type="button"
           onClick={onBack}
           disabled={isSending}
-          className="flex-1 py-3 text-sm font-medium text-neutral-600 border border-neutral-200 rounded-md hover:bg-neutral-50 disabled:opacity-50 transition-colors"
+          className="flex-1 py-3 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 transition-colors"
         >
           Back
         </button>
@@ -82,9 +102,16 @@ export function SplitSummary({
           type="button"
           onClick={onConfirm}
           disabled={isSending}
-          className="flex-1 py-3 text-sm font-semibold text-white bg-neutral-900 rounded-md hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+          className="flex-1 py-3 text-sm font-semibold text-white bg-indigo-600 rounded-lg shadow-sm hover:bg-indigo-700 hover:shadow-md disabled:opacity-50 transition-all"
         >
-          {isSending ? "Sending..." : "Send Payments"}
+          {isSending ? (
+            <span className="inline-flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Sending...
+            </span>
+          ) : (
+            "Send Payments"
+          )}
         </button>
       </div>
     </div>
