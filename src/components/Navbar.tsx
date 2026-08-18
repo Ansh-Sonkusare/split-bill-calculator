@@ -1,11 +1,11 @@
 "use client";
 
-import { useWallet } from "@/context/WalletContext";
+import { useWalletQuery } from "@/hooks/useWallet";
 import { BalanceDisplay } from "@/components/BalanceDisplay";
 import { WalletConnect } from "@/components/WalletConnect";
 
 export function Navbar() {
-  const { state } = useWallet();
+  const { isConnected } = useWalletQuery();
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/80 backdrop-blur-xl">
@@ -31,7 +31,7 @@ export function Navbar() {
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-3 shrink-0 ml-auto">
-          {state.isConnected && <BalanceDisplay />}
+          {isConnected && <BalanceDisplay />}
           <WalletConnect />
         </div>
       </div>

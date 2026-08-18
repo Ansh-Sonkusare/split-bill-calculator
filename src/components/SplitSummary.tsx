@@ -1,8 +1,13 @@
 "use client";
 
+import type { Currency } from "@/lib/stellar";
+
 interface SplitSummaryProps {
   totalAmount: string;
+  currency: Currency;
+  description: string;
   participants: string[];
+  customAmounts?: string[];
   onConfirm: () => void;
   onBack: () => void;
   isSending: boolean;
@@ -17,13 +22,17 @@ const avatarColors = [
 
 export function SplitSummary({
   totalAmount,
+  currency,
+  description,
   participants,
+  customAmounts,
   onConfirm,
   onBack,
   isSending,
 }: SplitSummaryProps) {
   const total = parseFloat(totalAmount);
   const perPerson = total / participants.length;
+  const isCustom = !!customAmounts;
 
   function truncateAddress(address: string) {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -32,6 +41,11 @@ export function SplitSummary({
   return (
     <div className="space-y-6">
       <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-lg">
+        {description && (
+          <p className="text-sm font-medium text-slate-300 mb-3 truncate">
+            {description}
+          </p>
+        )}
         <div className="flex items-center justify-between mb-5">
           <p className="text-[11px] text-slate-400 uppercase tracking-wider font-medium">
             Total Bill
@@ -54,13 +68,15 @@ export function SplitSummary({
             <p className="text-4xl font-bold tabular-nums tracking-tight">
               {total.toFixed(2)}
             </p>
-            <p className="text-xs text-slate-400 mt-1">XLM total</p>
+            <p className="text-xs text-slate-400 mt-1">{currency} total</p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold text-emerald-400 tabular-nums">
-              {perPerson.toFixed(4)}
+              {isCustom ? "Custom" : perPerson.toFixed(4)}
             </p>
-            <p className="text-xs text-slate-400 mt-1">XLM each</p>
+            <p className="text-xs text-slate-400 mt-1">
+              {isCustom ? "amounts" : `${currency} each`}
+            </p>
           </div>
         </div>
       </div>
@@ -88,7 +104,7 @@ export function SplitSummary({
               </div>
               <span className="text-sm font-semibold text-slate-900 tabular-nums shrink-0 ml-3">
                 {perPerson.toFixed(4)}
-                <span className="text-xs text-slate-400 font-normal"> XLM</span>
+                <span className="text-xs text-slate-400 font-normal"> {currency}</span>
               </span>
             </div>
           ))}

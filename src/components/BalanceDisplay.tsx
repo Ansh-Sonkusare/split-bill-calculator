@@ -1,27 +1,30 @@
 "use client";
 
-import { useWallet } from "@/context/WalletContext";
+import { useWalletQuery } from "@/hooks/useWallet";
 
 export function BalanceDisplay() {
-  const { state, refreshBalance } = useWallet();
-
-  if (!state.isConnected) return null;
+  const { xlmBalance, usdcBalance, isBalanceLoading, refreshBalance } = useWalletQuery();
 
   return (
-    <div className="flex items-center gap-1.5 h-10 bg-white border border-slate-200 rounded-xl pl-3 pr-1.5 shadow-sm">
-      <span className="text-[13px] font-bold text-slate-900 tabular-nums whitespace-nowrap">
-        {state.isBalanceLoading ? (
-          <span className="text-slate-400 font-normal">Loading…</span>
-        ) : state.balance ? (
-          parseFloat(state.balance).toFixed(2)
-        ) : (
-          "0.00"
-        )}
-      </span>
-      <span className="text-[11px] font-medium text-slate-400">XLM</span>
+    <div className="flex items-center gap-2 h-10 bg-white border border-slate-200 rounded-xl pl-3 pr-1.5 shadow-sm">
+      {isBalanceLoading ? (
+        <span className="text-[13px] text-slate-400">Loading…</span>
+      ) : (
+        <>
+          <span className="text-[13px] font-bold text-slate-900 tabular-nums whitespace-nowrap">
+            {parseFloat(xlmBalance).toFixed(2)}
+          </span>
+          <span className="text-[11px] font-medium text-slate-400">XLM</span>
+          <span className="text-slate-200">·</span>
+          <span className="text-[13px] font-bold text-slate-900 tabular-nums whitespace-nowrap">
+            {parseFloat(usdcBalance).toFixed(2)}
+          </span>
+          <span className="text-[11px] font-medium text-slate-400">USDC</span>
+        </>
+      )}
       <button
         onClick={refreshBalance}
-        disabled={state.isBalanceLoading}
+        disabled={isBalanceLoading}
         title="Refresh balance"
         className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-40 transition-colors"
       >

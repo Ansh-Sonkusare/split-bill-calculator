@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useWallet } from "@/context/WalletContext";
+import { useCallback } from "react";
+import { useWalletQuery } from "@/hooks/useWallet";
+import { useBillsQuery } from "@/hooks/useBills";
+import { useBillFlowStore } from "@/stores/billFlowStore";
 import { Navbar } from "@/components/Navbar";
 import { BillForm } from "@/components/BillForm";
 import { SplitSummary } from "@/components/SplitSummary";
 import { TransactionResult } from "@/components/TransactionResult";
-import { signAndSubmit } from "@/lib/stellar";
-
-type Step = "form" | "summary" | "result";
+import { BillHistory } from "@/components/BillHistory";
 
 const stepMeta = {
   form: {
@@ -44,65 +44,21 @@ const stepMeta = {
 } as const;
 
 export default function Home() {
-  const { state, connect } = useWallet();
-  const [step, setStep] = useState<Step>("form");
-  const [totalAmount, setTotalAmount] = useState("");
-  const [participants, setParticipants] = useState<string[]>([]);
-  const [isSending, setIsSending] = useState(false);
-  const [txStatus, setTxStatus] = useState<"success" | "error" | null>(null);
-  const [txHash, setTxHash] = useState<string>("");
-  const [txError, setTxError] = useState<string>("");
-
-  function handleCalculate(amount: string, addrs: string[]) {
-    setTotalAmount(amount);
-    setParticipants(addrs);
-    setStep("summary");
-  }
-
-  async function handleSend() {
-    if (!state.publicKey) return;
-
-    setIsSending(true);
-    setTxStatus(null);
-
-    try {
-      const recipients = participants.map((addr) => ({
-        address: addr,
-        amount: (parseFloat(totalAmount) / participants.length).toFixed(7),
-      }));
-
-      const result = await signAndSubmit(state.publicKey, recipients);
-      setTxHash(result.hash);
-      setTxStatus("success");
-      setStep("result");
-    } catch (err) {
-      setTxError(
-        err instanceof Error ? err.message : "Transaction failed"
-      );
-      setTxStatus("error");
-      setStep("result");
-    } finally {
-      setIsSending(false);
-    }
-  }
-
-  function handleReset() {
-    setStep("form");
-    setTotalAmount("");
-    setParticipants([]);
-    setTxStatus(null);
-    setTxHash("");
-    setTxError("");
-  }
-
+  const wallet = useWalletQuery();
+  const { addBill } = useBillsQuery();
+  const { step, totalAmount, currency, description, participants, customAmounts, isSending, txStatus, txHash, txError, calculate, send, goBack, reset } = useBillFlowStore();
   const meta = stepMeta[step];
+
+  const handleSend = useCallback(() => {
+    if (wallet.publicKey) send(wallet.publicKey, addBill);
+  }, [wallet.publicKey, send, addBill]);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
       <main className="flex-1 max-w-lg mx-auto w-full px-5 py-10">
-        {state.error && (
+        {wallet.error && (
           <div className="mb-6 p-3.5 flex items-start gap-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-700">
             <svg
               viewBox="0 0 24 24"
@@ -117,18 +73,18 @@ export default function Home() {
                 d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
               />
             </svg>
-            {state.error}
+            {wallet.error}
           </div>
         )}
 
-        {!state.isConnected ? (
+        {!wallet.isConnected ? (
           <div className="text-center pt-6 pb-10">
             <div className="mx-auto w-20 h-20 flex items-center justify-center bg-slate-900 rounded-3xl shadow-lg mb-7 animate-fade-up">
               <span className="text-4xl text-white">⌁</span>
             </div>
             <h2 className="text-3xl font-bold text-slate-900 tracking-tight animate-fade-up animate-fade-up-delay-1">
               Split bills. <br />
-              <span className="text-indigo-600">Send XLM together.</span>
+              <span className="text-indigo-600">Send crypto together.</span>
             </h2>
             <p className="mt-3 text-[15px] text-slate-500 max-w-sm mx-auto animate-fade-up animate-fade-up-delay-2">
               Connect your Freighter wallet to split any bill evenly and pay
@@ -136,7 +92,7 @@ export default function Home() {
             </p>
 
             <button
-              onClick={connect}
+              onClick={() => wallet.connect()}
               className="mt-8 inline-flex items-center gap-2.5 h-12 px-6 rounded-xl text-sm font-semibold text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 hover:shadow-md active:scale-[0.99] transition-all animate-fade-up animate-fade-up-delay-3"
             >
               <svg
@@ -162,7 +118,7 @@ export default function Home() {
               <div className="space-y-3">
                 {[
                   ["1", "Connect your wallet", "Link your Freighter wallet on Stellar Testnet."],
-                  ["2", "Enter the bill", "Type the total amount in XLM you want to split."],
+                  ["2", "Enter the bill", "Type the total amount in XLM or USDC you want to split."],
                   ["3", "Add the people", "Paste each person's Stellar address."],
                   ["4", "Send & confirm", "Review the split and send one payment to everyone."],
                 ].map(([num, title, desc], i) => (
@@ -207,13 +163,16 @@ export default function Home() {
             </div>
 
             {step === "form" ? (
-              <BillForm onCalculate={handleCalculate} />
+              <BillForm onCalculate={calculate} />
             ) : step === "summary" ? (
               <SplitSummary
                 totalAmount={totalAmount}
+                currency={currency}
+                description={description}
                 participants={participants}
+                customAmounts={customAmounts}
                 onConfirm={handleSend}
-                onBack={() => setStep("form")}
+                onBack={goBack}
                 isSending={isSending}
               />
             ) : (
@@ -221,12 +180,18 @@ export default function Home() {
                 status={txStatus}
                 txHash={txHash}
                 errorMessage={txError}
-                onReset={handleReset}
+                onReset={reset}
               />
             )}
           </div>
         )}
       </main>
+
+      {wallet.isConnected && (
+        <div className="max-w-lg mx-auto w-full px-5 pb-10">
+          <BillHistory />
+        </div>
+      )}
 
       <footer className="py-6 text-center">
         <span className="inline-flex items-center gap-2 text-xs text-slate-400">

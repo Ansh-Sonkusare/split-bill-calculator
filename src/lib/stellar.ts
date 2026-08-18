@@ -12,12 +12,42 @@ const HORIZON_URL = "https://horizon-testnet.stellar.org";
 
 export const server = new Horizon.Server(HORIZON_URL);
 
-export async function getBalance(publicKey: string): Promise<string> {
+const USDC_ISSUER = "GBMMZMKVJGRKFNQ4SPYDXYB3Y6YZYUGIYAXI6K5YOKAFYYVHRCG6VZKK";
+let _usdcAsset: Asset | null = null;
+function getUsdcAsset(): Asset {
+  if (!_usdcAsset) _usdcAsset = new Asset("USDC", USDC_ISSUER);
+  return _usdcAsset;
+}
+
+export type Currency = "XLM" | "USDC";
+
+export interface Balances {
+  xlm: string;
+  usdc: string;
+}
+
+export async function getBalances(publicKey: string): Promise<Balances> {
   const account = await server.loadAccount(publicKey);
-  const xlmBalance = account.balances.find(
-    (b) => b.asset_type === "native"
-  );
-  return xlmBalance ? xlmBalance.balance : "0";
+  let xlm = "0";
+  let usdc = "0";
+
+  for (const b of account.balances) {
+    if (b.asset_type === "native") {
+      xlm = b.balance;
+    } else if (
+      b.asset_type === "credit_alphanum4" &&
+      b.asset_code === "USDC" &&
+      b.asset_issuer === USDC_ISSUER
+    ) {
+      usdc = b.balance;
+    }
+  }
+
+  return { xlm, usdc };
+}
+
+export function getAsset(currency: Currency): Asset {
+  return currency === "USDC" ? getUsdcAsset() : Asset.native();
 }
 
 export function isValidStellarAddress(address: string): boolean {
@@ -33,9 +63,11 @@ export interface Recipient {
 
 export async function buildBatchPaymentTx(
   sourcePublicKey: string,
-  recipients: Recipient[]
+  recipients: Recipient[],
+  currency: Currency = "XLM"
 ): Promise<string> {
   const account = await server.loadAccount(sourcePublicKey);
+  const asset = getAsset(currency);
 
   const txBuilder = new TransactionBuilder(account, {
     fee: BASE_FEE,
@@ -46,7 +78,7 @@ export async function buildBatchPaymentTx(
     txBuilder.addOperation(
       Operation.payment({
         destination: address,
-        asset: Asset.native(),
+        asset,
         amount: amount,
       })
     );
@@ -58,9 +90,10 @@ export async function buildBatchPaymentTx(
 
 export async function signAndSubmit(
   sourcePublicKey: string,
-  recipients: Recipient[]
+  recipients: Recipient[],
+  currency: Currency = "XLM"
 ): Promise<{ hash: string }> {
-  const xdr = await buildBatchPaymentTx(sourcePublicKey, recipients);
+  const xdr = await buildBatchPaymentTx(sourcePublicKey, recipients, currency);
   const signedXdr = await signTransaction(xdr);
   const transaction = TransactionBuilder.fromXDR(
     signedXdr,
