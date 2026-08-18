@@ -1,92 +1,93 @@
-# Split Bill Calculator - Stellar dApp
+# Split Bill Calculator — Stellar dApp
 
-A decentralized application for splitting bills and sending XLM payments on the Stellar Testnet. Built with Next.js, TypeScript, Tailwind CSS, and integrated with Freighter wallet.
+A decentralized bill-splitting app on Stellar Testnet. Split any bill evenly or with custom amounts, and pay everyone in a single on-chain transaction. Supports XLM and USDC.
 
 ## Features
 
-- **Wallet Integration**: Connect and disconnect Freighter wallet
-- **Balance Display**: View your XLM balance in real-time
-- **Bill Splitting**: Enter a total amount and split equally among participants
-- **Batch Payments**: Send XLM to multiple participants in a single transaction
-- **Transaction Feedback**: View transaction hash and status on Stellar Explorer
+- **Freighter Wallet** — connect/disconnect with auto-reconnect
+- **Dual Currency** — pay in XLM or USDC
+- **Even & Custom Splits** — equal split or per-participant amounts
+- **Bill Templates** — quick-start presets for dinner, rent, travel, groceries, subscriptions
+- **Batch Payments** — multiple recipients in one Stellar transaction
+- **Bill History** — past bills persisted in localStorage with settlement status
+- **Settlement Tracking** — per-participant settled/pending with tx links
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS
-- **Blockchain**: Stellar SDK, Stellar Testnet
-- **Wallet**: Freighter Browser Extension
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| State | TanStack Query (server/async) + Zustand (UI wizard) |
+| Blockchain | Stellar SDK, Stellar Testnet |
+| Wallet | Freighter Browser Extension |
 
-## Setup Instructions
+## Getting Started
 
 ### Prerequisites
 
 1. Install [Freighter](https://freighter.app/) browser extension
-2. Create or import a wallet on Stellar Testnet
-3. Get testnet XLM from the [Stellar Friendbot](https://friendbot.stellar.org/)
+2. Create/import a wallet on Stellar Testnet
+3. Fund it with testnet XLM from [Stellar Friendbot](https://friendbot.stellar.org/)
 
-### Installation
+### Install & Run
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/split-bill-calculator.git
-
-# Navigate to the project
+git clone https://github.com/Ansh-Sonkusare/split-bill-calculator.git
 cd split-bill-calculator
-
-# Install dependencies
 npm install
-
-# Run the development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
 ## How It Works
 
-1. **Connect Wallet**: Click "Connect Freighter" to link your Stellar wallet
-2. **Enter Bill Amount**: Input the total XLM amount to split
-3. **Add Participants**: Enter Stellar addresses (G...) for each person
-4. **Review Split**: See how much each participant will receive
-5. **Send Payment**: Confirm and send XLM to all participants in one transaction
-
-## Screenshots
-
-### Wallet Connected State
-![Wallet Connected](screenshots/wallet-connected.png)
-
-### Balance Displayed
-![Balance Display](screenshots/balance-displayed.png)
-
-### Successful Transaction
-![Transaction Success](screenshots/transaction-success.png)
-
-### Transaction Result Shown
-![Transaction Result](screenshots/transaction-result.png)
+1. **Connect** your Freighter wallet
+2. **Pick a template** (or start custom) — sets currency and participant count
+3. **Enter the bill** — total amount in XLM or USDC
+4. **Add participants** — paste Stellar addresses (G...)
+5. **Review the split** — see per-person amounts
+6. **Send** — one batch transaction pays everyone
+7. **Track** — bill appears in history with settlement status
 
 ## Project Structure
 
 ```
-split-bill-calculator/
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx          # Root layout with WalletProvider
-│   │   ├── page.tsx            # Main application page
-│   │   └── globals.css         # Global styles
-│   ├── components/
-│   │   ├── WalletConnect.tsx   # Wallet connection UI
-│   │   ├── BalanceDisplay.tsx  # XLM balance display
-│   │   ├── BillForm.tsx        # Bill input form
-│   │   ├── SplitSummary.tsx    # Payment summary
-│   │   └── TransactionResult.tsx # Transaction feedback
-│   ├── context/
-│   │   └── WalletContext.tsx   # Global wallet state
-│   └── lib/
-│       ├── freighter.ts        # Freighter wallet helpers
-│       └── stellar.ts          # Stellar SDK utilities
-├── package.json
-├── tailwind.config.ts
-└── tsconfig.json
+src/
+├── app/
+│   ├── layout.tsx            # Root layout (QueryProvider)
+│   ├── page.tsx              # Main page — wizard + history
+│   └── globals.css
+├── components/
+│   ├── BalanceDisplay.tsx    # XLM + USDC balance
+│   ├── BillForm.tsx          # Form with template picker + currency selector
+│   ├── BillHistory.tsx       # Past bills list
+│   ├── Navbar.tsx            # Header with balance + wallet
+│   ├── SplitSummary.tsx      # Review before sending
+│   ├── TransactionResult.tsx # Success/error display
+│   └── WalletConnect.tsx     # Connect/disconnect button
+├── hooks/
+│   ├── useWallet.ts          # TanStack Query — wallet + balance
+│   └── useBills.ts           # TanStack Query — bill CRUD (localStorage)
+├── stores/
+│   └── billFlowStore.ts      # Zustand — wizard state machine
+├── providers/
+│   └── QueryProvider.tsx     # TanStack Query client provider
+└── lib/
+    ├── stellar.ts            # Stellar SDK — payments, balances, USDC asset
+    ├── freighter.ts           # Freighter wallet integration
+    ├── storage.ts            # localStorage CRUD for bills
+    └── templates.ts          # Bill template definitions
+```
+
+## Scripts
+
+```bash
+npm run dev      # Development server
+npm run build    # Production build
+npm run lint     # ESLint
 ```
 
 ## License
